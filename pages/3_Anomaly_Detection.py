@@ -124,7 +124,8 @@ with col_chart1:
     if not filtered_anom.empty:
         # Construct timeline dataframe
         sample_context = df[df["meter_id"].isin(filtered_anom["meter_id"].unique()[:10])].copy()
-        sample_context = sample_context.sample(n=min(10000, len(sample_context)), random_state=42)
+        if len(sample_context) > 10000:
+            sample_context = sample_context.sample(n=10000, random_state=42)
         sample_context["anomaly_flag"] = 0
         sample_context["anomaly_type"] = "Normal"
         sample_context["anomaly_score"] = 0.0

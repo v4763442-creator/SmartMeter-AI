@@ -290,10 +290,25 @@ def plot_recursive_forecast(
 def plot_anomaly_timeline(df: pd.DataFrame, sample_n: int = 15000) -> go.Figure:
     """Interactive timeline showing normal vs anomalous consumption readings."""
     if len(df) > sample_n:
-        # Sample while ensuring all anomalies are preserved
         anom_rows = df[df["anomaly_flag"] == 1]
-        norm_rows = df[df["anomaly_flag"] == 0].sample(n=min(sample_n - len(anom_rows), len(df) - len(anom_rows)), random_state=42)
-        plot_df = pd.concat([anom_rows, norm_rows]).sort_values("timestamp")
+        norm_pool = df[df["anomaly_flag"] == 0]
+
+        # Allocate budget between anomalies and normal background readings
+        max_anom = min(len(anom_rows), max(1000, sample_n // 4))
+        if len(anom_rows) > max_anom and max_anom > 0:
+            anom_sample = anom_rows.sample(n=max_anom, random_state=42)
+        else:
+            anom_sample = anom_rows
+
+        budget_remaining = max(0, sample_n - len(anom_sample))
+        n_norm = min(budget_remaining, len(norm_pool))
+
+        if n_norm > 0 and len(norm_pool) > 0:
+            norm_sample = norm_pool.sample(n=n_norm, random_state=42)
+        else:
+            norm_sample = norm_pool.head(0)
+
+        plot_df = pd.concat([anom_sample, norm_sample]).sort_values("timestamp")
     else:
         plot_df = df.sort_values("timestamp")
 

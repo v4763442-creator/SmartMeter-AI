@@ -1,0 +1,131 @@
+{
+    "timestamp": "2026-10-30T16:37:34.194274",
+    "total_records": 876000,
+    "unique_meters": 100,
+    "time_range": {
+        "start": "2025-01-01 00:00:00",
+        "end": "2025-12-31 23:00:00"
+    },
+    "chronological_split": {
+        "train_start": "2025-01-08 00:00:00",
+        "train_end": "2025-09-15 14:00:00",
+        "train_rows": 601500,
+        "val_start": "2025-09-15 15:00:00",
+        "val_end": "2025-11-08 07:00:00",
+        "val_rows": 128900,
+        "test_start": "2025-11-08 08:00:00",
+        "test_end": "2025-12-31 23:00:00",
+        "test_rows": 128800
+    },
+    "forecasting": {
+        "target": "consumption_kwh",
+        "features": [
+            "lag_1",
+            "lag_2",
+            "lag_24",
+            "lag_48",
+            "lag_168",
+            "rolling_mean_24",
+            "rolling_mean_168",
+            "rolling_std_24",
+            "rolling_max_24",
+            "rolling_min_24",
+            "hour",
+            "day_of_week",
+            "month",
+            "day_of_month",
+            "is_weekend",
+            "is_holiday",
+            "temperature",
+            "meter_encoded"
+        ],
+        "best_max_depth": 12,
+        "depth_tuning_scores": {
+            "8": {
+                "MAE": 0.0827,
+                "RMSE": 0.1688,
+                "R2": 0.6486
+            },
+            "10": {
+                "MAE": 0.0803,
+                "RMSE": 0.1671,
+                "R2": 0.6556
+            },
+            "12": {
+                "MAE": 0.0794,
+                "RMSE": 0.1663,
+                "R2": 0.6589
+            }
+        },
+        "test_metrics": {
+            "Naive Baseline (lag_24)": {
+                "MAE": 0.1362,
+                "RMSE": 0.2941,
+                "R2": 0.2086
+            },
+            "Moving Average Baseline (24h)": {
+                "MAE": 0.1851,
+                "RMSE": 0.2884,
+                "R2": 0.2388
+            },
+            "Random Forest Regressor": {
+                "MAE": 0.0892,
+                "RMSE": 0.1929,
+                "R2": 0.6595
+            }
+        }
+    },
+    "anomaly_detection": {
+        "features": [
+            "consumption_kwh",
+            "rolling_mean_24",
+            "rolling_std_24",
+            "hour",
+            "temperature",
+            "consumption_deviation",
+            "household_deviation_hist"
+        ],
+        "contamination": 0.025,
+        "test_evaluation": {
+            "precision": 0.5646,
+            "recall": 0.273,
+            "f1_score": 0.3681,
+            "confusion_matrix": [
+                [
+                    124597,
+                    731
+                ],
+                [
+                    2524,
+                    948
+                ]
+            ],
+            "true_positives": 948,
+            "false_positives": 731,
+            "true_negatives": 124597,
+            "false_negatives": 2524
+        },
+        "full_evaluation": {
+            "precision": 0.3506,
+            "recall": 0.2751,
+            "f1_score": 0.3083,
+            "confusion_matrix": [
+                [
+                    825530,
+                    11366
+                ],
+                [
+                    16169,
+                    6135
+                ]
+            ],
+            "true_positives": 6135,
+            "false_positives": 11366,
+            "true_negatives": 825530,
+            "false_negatives": 16169
+        },
+        "total_anomalies_detected": 17501,
+        "anomaly_rate_pct": 2.037
+    },
+    "execution_time_seconds": 143.93
+}

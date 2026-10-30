@@ -1,0 +1,4 @@
+Model,MAE,RMSE,R2
+Naive Baseline (lag_24),0.1362,0.2941,0.2086
+Moving Average Baseline (24h),0.1851,0.2884,0.2388
+Random Forest Regressor,0.0892,0.1929,0.6595
